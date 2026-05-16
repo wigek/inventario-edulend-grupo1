@@ -1,0 +1,38 @@
+services:
+  # Definición de la Base de Datos PostgreSQL
+  - type: psql
+    name: inventarioedulend-db
+    plan: free # Usa 'free' o 'starter'
+    region: oregon # Cambia a tu región preferida
+    postgresMajorVersion: 15
+
+  # Definición de la Aplicación Spring Boot (Docker)
+  - type: web
+    name: inventarioedulend-api
+    env: docker
+    plan: free # Usa 'free' o 'starter'
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    envVars:
+      # Render inyectará el host, puerto y base de datos para armar el string
+      - key: DB_HOST
+        fromDatabase:
+          name: inventarioedulend-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: inventarioedulend-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: inventarioedulend-db
+          property: database
+      # Render inyecta las credenciales
+      - key: DB_USERNAME
+        fromDatabase:
+          name: inventarioedulend-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: inventarioedulend-db
+          property: password
