@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.grupo1.inventarioedulend.users.models.User;
+import com.grupo1.inventarioedulend.users.models.AuthResponse;
 import com.grupo1.inventarioedulend.users.services.LoginService;
 
 @RestController
@@ -21,9 +22,9 @@ public class LoginController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestParam String email, @RequestParam String password) {
         try {
-            User user = loginService.login(email, password);
-            return ResponseEntity.ok(user);
-        } catch (RuntimeException e) {
+            AuthResponse authResponse = loginService.login(email, password);
+            return ResponseEntity.ok(authResponse);
+        } catch (Exception e) {
             // Devolvemos un 400 Bad Request con el mensaje "El usuario no existe" o "Contraseña incorrecta"
             return ResponseEntity.badRequest().body(e.getMessage());
         }
